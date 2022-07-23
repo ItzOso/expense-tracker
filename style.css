@@ -1,0 +1,25 @@
+body {
+    background: linear-gradient(90deg, rgb(255, 255, 255), rgb(188, 188, 188));
+}
+
+form {
+    width: 40%;
+    margin: 0 auto;
+}
+
+table {
+    width: 40% !important;
+    margin: 0 auto;
+    background: white;
+}
+
+tr:hover {
+    text-decoration: line-through;
+    color: rgb(214, 28, 28);
+}
+
+.table-secondary:hover,
+#head:hover {
+    text-decoration: none;
+    color: black;
+}
