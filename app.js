@@ -90,7 +90,7 @@ function deleteExpense(e) {
             if (
                 expenses[i].name == expenseList[0].innerText &&
                 expenses[i].date == expenseList[1].innerText &&
-                expenses[i].cost == expenseList[2].innerText
+                expenses[i].cost == expenseList[2].innerText.substring(1)
             ) {
                 const expenseIndex = i;
                 expenses.splice(expenseIndex, 1);
