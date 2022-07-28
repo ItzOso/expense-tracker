@@ -5,6 +5,7 @@ const costInput = document.querySelector("#cost-input");
 const tbody = document.querySelector("tbody");
 const addButton = document.querySelector("#add-button");
 const defaultTable = document.querySelector(".table-secondary");
+const total = document.querySelector("#total");
 
 let expenses = [];
 
@@ -12,6 +13,7 @@ let expenses = [];
 document.addEventListener("DOMContentLoaded", () => {
     getExpenses();
     expenseCheck();
+    getTotal();
 });
 addButton.addEventListener("click", beforeAddExpense);
 tbody.addEventListener("click", deleteExpense);
@@ -19,36 +21,32 @@ tbody.addEventListener("click", deleteExpense);
 // Functions
 function beforeAddExpense(e) {
     e.preventDefault();
-    if (isNaN(costInput.value)) {
-        alert("Please only enter numbers in the cost input!");
+    if (nameInput.value == "" || costInput.value == "") {
+        alert("Please fill out at least the Name & Cost!");
     } else {
-        if (nameInput.value == "" || costInput.value == "") {
-            alert("Please fill out at least the Name & Cost!");
-        } else {
-            if (expenses.length !== 0) {
-                const newExpense = {
-                    name: nameInput.value || "n/a",
-                    date: dateInput.value || "n/a",
-                    cost: costInput.value || "n/a",
-                };
-                console.log(newExpense);
-                for (i = 0; i < expenses.length; i++) {
-                    console.log(i);
-                    if (
-                        expenses[i].name == newExpense.name &&
-                        expenses[i].date == newExpense.date &&
-                        expenses[i].cost == newExpense.cost
-                    ) {
-                        alert("You already have that expense, please make it unique!");
-                        break;
-                    } else {
-                        addExpense();
-                        break;
-                    }
+        if (expenses.length !== 0) {
+            const newExpense = {
+                name: nameInput.value || "n/a",
+                date: dateInput.value || "n/a",
+                cost: costInput.value || "n/a",
+            };
+            console.log(newExpense);
+            for (i = 0; i < expenses.length; i++) {
+                console.log(i);
+                if (
+                    expenses[i].name == newExpense.name &&
+                    expenses[i].date == newExpense.date &&
+                    expenses[i].cost == newExpense.cost
+                ) {
+                    alert("You already have that expense, please make it unique!");
+                    break;
+                } else {
+                    addExpense();
+                    break;
                 }
-            } else {
-                addExpense();
             }
+        } else {
+            addExpense();
         }
     }
 }
@@ -56,11 +54,11 @@ function beforeAddExpense(e) {
 function addExpense() {
     const tr = document.createElement("tr");
     const name = document.createElement("td");
-    name.innerText = !nameInput.value == "" ? nameInput.value : "n/a";
+    name.innerText = nameInput.value;
     const date = document.createElement("td");
-    date.innerText = !dateInput.value == "" ? dateInput.value : "n/a";
+    date.innerText = dateInput.value || "n/a";
     const cost = document.createElement("td");
-    cost.innerText = !costInput.value == "" ? costInput.value : "n/a";
+    cost.innerText = `$${costInput.value}`;
 
     tr.appendChild(name);
     tr.appendChild(date);
@@ -78,6 +76,7 @@ function addExpense() {
 
     updateLocalExpenses();
     expenseCheck();
+    getTotal();
 
     nameInput.value = "";
     dateInput.value = "";
@@ -101,14 +100,17 @@ function deleteExpense(e) {
         e.target.parentNode.remove();
         updateLocalExpenses();
         expenseCheck();
+        getTotal();
     }
 }
 
 function expenseCheck() {
     if (!expenses.length == 0) {
         defaultTable.style.visibility = "collapse";
+        total.parentElement.style.display = "block";
     } else {
         defaultTable.style.visibility = "visible";
+        total.parentElement.style.display = "none";
     }
 }
 
@@ -131,7 +133,7 @@ function getExpenses() {
         const date = document.createElement("td");
         date.innerText = expense.date;
         const cost = document.createElement("td");
-        cost.innerText = expense.cost;
+        cost.innerText = `$${expense.cost}`;
 
         tr.appendChild(name);
         tr.appendChild(date);
@@ -139,4 +141,13 @@ function getExpenses() {
 
         tbody.appendChild(tr);
     });
+}
+
+function getTotal() {
+    let totalAmount = 0;
+    for (i = 0; i < expenses.length; i++) {
+        totalAmount += parseFloat(expenses[i].cost);
+    }
+
+    total.innerText = totalAmount;
 }
